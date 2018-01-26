@@ -29,9 +29,8 @@ function processValue (value, rule) {
 }
 
 function isValidStyle (ruleName, value) {
-  if (validStyles.indexOf(ruleName) < 0 || /inherit|calc|!important|(vh|vw)$/.test(value)) return false
+  if (validStyles.indexOf(ruleName) < 0 || /inherit|calc|!important|rotate|translateZ|(vh|vw)$/.test(value)) return false
   if (invalidStyles[ruleName] != null && (invalidStyles[ruleName].indexOf('*') >= 0 || invalidStyles[ruleName].indexOf(value) >= 0)) return false
-  invalidStyles[ruleName] && console.log(ruleName, value, invalidStyles[ruleName])
   return true
 }
 
@@ -47,39 +46,81 @@ function processStyle (style) {
 }
 
 function toFormattedValue (name, value) {
-  name === 'transform' && console.log(value)
   if (value instanceof Array) return `${name}: [${value.map(i => `{ ${Object.keys(i).map(v => toFormattedValue(v, i[v])).join(', ')} }`).join(', ')}]`
   if (typeof value !== 'object') return `${name}: ${typeof value === 'string' ? `'${value}'` : value}`
   return `${name}: { ${Object.keys(value).map(key => toFormattedValue(key, value[key])).join(', ')} }`
 }
 
-const rnStyles = styles
-  .filter(i => /^\./.test(i.selector) && i.selector !== 'flexAuto')
-  .filter(i => !/hover|\.child|MozFocusInner|aspect-ratio|nested|[[,+'"]|(-(l|m|ns)$)/.test(i.selector))
-  .filter(i => !/color/.test(i.style))
-  .map(i => ({
-    selector: processSelector(i.selector),
-    style: processStyle(i.style, i.selector)
-  }))
-  .filter(i => JSON.stringify(i.style) !== '{}')
-  .reduce((a, i) => {
-    a[i.selector] = i.style
-    return a
-  }, additionalStyles)
+function toGroupName (name) {
+  if (name === 'zIndex') { return 'z-index' }
+  if (/color/i.test(name)) { return 'color' }
+  if (/items|self|justify/i.test(name)) { return 'flex' }
+  if (['left', 'top', 'right', 'bottom', 'position'].indexOf(name) >= 0) { return 'position' }
+  return nameUtil.toDashedName(name.replace(/top|left|right|bottom|min|max/i, '')).split('-')[0]
+}
 
-console.log(rnStyles.growLarge)
-const formattedStyles = Object.keys(rnStyles)
-  .sort((a, b) => (a === b ? 0 : a > b ? 1 : -1))
-  .reduce((a, key) => {
-    return a.concat(toFormattedValue(key, rnStyles[key]))
-  }, []).join(',\n  ')
+function convertStyles () {
 
-const functionalStyles = `
+  return styles
+    .filter(i => /^\./.test(i.selector) && i.selector !== 'flexAuto')
+    .filter(i => !/hover|\.child|MozFocusInner|aspect-ratio|nested|grow|[[,+'"()]|(-(l|m|ns)$)/.test(i.selector))
+    .map(i => ({
+      selector: processSelector(i.selector),
+      style: processStyle(i.style, i.selector)
+    }))
+    .filter(i => JSON.stringify(i.style) !== '{}')
+    .reduce((a, i) => {
+      a[i.selector] = i.style
+      return a
+    }, additionalStyles)
+}
+
+function generateFunctionalStyles (rnStyles) {
+  const formattedStyles = Object.keys(rnStyles)
+    .reduce((a, key) => {
+      return a.concat(toFormattedValue(key, rnStyles[key]))
+    }, []).join(',\n  ')
+
+  const functionalStyles = `
 module.exports = {
   ${formattedStyles}
 }
 `
 
-fs.writeFile('../functional-styles.js', functionalStyles)
+  fs.writeFile(`${__dirname}/functional-styles.js`, functionalStyles)
 
-console.log(functionalStyles)
+}
+
+function generateReadMe (rnStyles) {
+
+  const title = [
+    ['STYLE NAME', 'STYLES'],
+    ['----------', '------']
+  ]
+
+  const readmeGroups = Object.keys(rnStyles).reduce((a, name) => {
+    const item = rnStyles[name]
+    const group = toGroupName(Object.keys(item)[0])
+    a[group] = a[group] || []
+    a[group].push([name, JSON.stringify(item).replace(/:/g, ': ').replace(/,/g, ', ')])
+    return a
+  }, {})
+
+  const readme = Object.keys(readmeGroups).reduce((a, groupName) => {
+    return `${a}
+## ${groupName.toUpperCase()}
+
+${title.concat(readmeGroups[groupName]).map(i => i.join(' | ')).join('\n')}
+`
+  }, '')
+
+  fs.writeFile(`${__dirname}/README.md`, readme)
+}
+
+function run () {
+  const rnStyles = convertStyles()
+  generateFunctionalStyles(rnStyles)
+  generateReadMe(rnStyles)
+}
+
+run()

@@ -10,7 +10,8 @@
     "wrap-reverse"
   ],
   "overflow": [
-    "auto"
+    "auto",
+    "scroll"
   ],
   "zIndex": [
     "initial",
@@ -22,5 +23,8 @@
   ],
   "borderRadius": [
     "100%"
+  ],
+  "textAlign": [
+    "justify"
   ]
 }

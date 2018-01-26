@@ -4,6 +4,7 @@
   "description": "Functional styles for react native based on Tachons library",
   "main": "index.js",
   "scripts": {
+    "generate": "node src/tachyons/convert.js",
     "clean": "rimraf index.js index.d.ts",
     "build": "npm run clean && tsc",
     "pre:commit": "npm run build",

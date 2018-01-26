@@ -10,5 +10,8 @@ module.exports = {
   flex7: { flex: 0.7 },
   flex8: { flex: 0.8 },
   flex9: { flex: 0.9 },
-  noFlex: { flex: -1 }
+  noFlex: { flex: -1 },
+  contain: { resizeMode: 'contain' },
+  cover: { resizeMode: 'cover' },
+  stretch: { resizeMode: 'stretch' },
 }
