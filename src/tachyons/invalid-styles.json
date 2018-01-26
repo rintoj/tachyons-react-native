@@ -1,0 +1,26 @@
+{
+  "position": [
+    "fixed",
+    "static"
+  ],
+  "borderStyle": [
+    "none"
+  ],
+  "flexWrap": [
+    "wrap-reverse"
+  ],
+  "overflow": [
+    "auto"
+  ],
+  "zIndex": [
+    "initial",
+    "unset"
+  ],
+  "flex": [
+    "1 1 auto",
+    "none"
+  ],
+  "borderRadius": [
+    "100%"
+  ]
+}
