@@ -1,6 +1,6 @@
 {
   "name": "tachyons-react-native",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Functional styles for react native based on Tachons library",
   "main": "index.js",
   "scripts": {
