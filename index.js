@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = require("react");
 const react_native_1 = require("react-native");
-exports.styles = react_native_1.StyleSheet.create({
+const theme = {};
+exports.styles = Object.assign({ theme }, react_native_1.StyleSheet.create({
     flex: { flex: 1 },
     flex0: { flex: 0 },
     flex1: { flex: 0.1 },
@@ -508,7 +509,7 @@ exports.styles = react_native_1.StyleSheet.create({
     z999: { zIndex: 999 },
     z9999: { zIndex: 9999 },
     zMax: { zIndex: 2147483647 },
-});
+}));
 let selectedTheme;
 const themes = {};
 function addColor(name, color) {
@@ -534,8 +535,8 @@ function addTheme(themeName, colors) {
         return Object.assign({}, a, addColor(colorName, colors[colorName]));
     }, {});
     Object.keys(themes[themeName]).forEach((styleName) => {
-        exports.styles[styleName] = undefined;
-        Object.defineProperty(exports.styles, styleName, {
+        exports.styles.theme[styleName] = undefined;
+        Object.defineProperty(exports.styles.theme, styleName, {
             get() { return themes[selectedTheme] && themes[selectedTheme][styleName]; }, set() { },
         });
     });
@@ -545,11 +546,11 @@ function currentTheme() {
     return selectedTheme;
 }
 exports.currentTheme = currentTheme;
-function setTheme(theme) {
-    if (Object.keys(themes).indexOf(theme) < 0) {
+function setTheme(themeName) {
+    if (Object.keys(themes).indexOf(themeName) < 0) {
         throw new Error('Invalid theme name');
     }
-    selectedTheme = theme;
+    selectedTheme = themeName;
 }
 exports.setTheme = setTheme;
 function withTheme(TargetComponent) {
@@ -558,14 +559,14 @@ function withTheme(TargetComponent) {
             super(props);
             this.state = { theme: selectedTheme };
         }
-        setTheme(theme) {
+        setTheme(themeName) {
             this.setState(state => {
-                setTheme(theme);
-                return { theme };
+                setTheme(themeName);
+                return { theme: themeName };
             });
         }
         render() {
-            return React.createElement(TargetComponent, Object.assign({}, this.props, { theme: this.state.theme, setTheme: (theme) => this.setTheme(theme) }));
+            return React.createElement(TargetComponent, Object.assign({}, this.props, { theme: this.state.theme, setTheme: (themeName) => this.setTheme(themeName) }));
         }
     };
 }

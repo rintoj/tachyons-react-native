@@ -59,8 +59,8 @@ import { styles as s } from 'tachyons-react-native'
 export default class App extends React.Component {
   render () {
     return (
-      <View style={[s.flex, s.alignCenter, s.justifyCenter, s.primaryBg]}>
-        <Text style={[s.tc, s.b, s.i, s.ba, s.primaryText]}>Open up App.js to start working on your app!</Text>
+      <View style={[s.flex, s.alignCenter, s.justifyCenter, s.theme.primaryBg]}>
+        <Text style={[s.tc, s.b, s.i, s.ba, s.theme.primaryText]}>Open up App.js to start working on your app!</Text>
       </View >
     )
   }
@@ -79,11 +79,14 @@ import { styles as s, withTheme } from 'tachyons-react-native'
 export default withTheme(class App extends React.Component {
   render () {
     return (
-      <View style={[s.flex, s.alignCenter, s.justifyCenter, s.primaryBg]}>
-        <Text style={[s.tc, s.b, s.i, s.ba, s.primaryText]}>Open up App.js to start working on your app!</Text>
-        <TouchableOpacity onPress={() => this.props.setTheme(this.props.theme === 'dark' ? 'light' : 'dark')}>
-          <Text>Toggle Theme</Text>
-        </TouchableOpacity>
+      <View style={[s.flex, s.flexColumn, s.alignCenter, s.justifyCenter, s.theme.primaryBg]}>
+        <Text style={[s.tc, s.b, s.i, s.theme.primaryText]}>Open up App.js to start working on your app!</Text>
+        <View style={[s.flex1, s.justifyCenter, s.mh5, s.mv2]}>
+          <TouchableOpacity style={[s.pa2, s.theme.accentBg]}
+            onPress={() => this.props.setTheme(this.props.theme === 'dark' ? 'light' : 'dark')}>
+            <Text style={[s.tc]}>Toggle Theme</Text>
+          </TouchableOpacity>
+        </View>
       </View >
     )
   }
@@ -94,33 +97,33 @@ export default withTheme(class App extends React.Component {
 
 STYLE NAME | STYLES
 |-------|---------------------------------
-${name} | {"color": ${color}}
-${name}TextShadow | {"textShadowColor": ${color}}
-${name}TextDecoration | {"textDecorationColor": ${color}}
-${name}Bg | {"backgroundColor": ${color}}
-${name}Ba | {"borderColor": ${color}}
-${name}Bt | {"borderTopColor": ${color}}
-${name}Br | { borderRightColor: ${color} }
-${name}Bb | {"borderBottomColor": ${color}}
-${name}Bl | {"borderLeftColor": ${color}}
-${name}Tint | {"tintColor": ${color}}
-${name}Overlay | {"overlayColor": ${color}}
+theme.${name} | {"color": ${color}}
+theme.${name}TextShadow | {"textShadowColor": ${color}}
+theme.${name}TextDecoration | {"textDecorationColor": ${color}}
+theme.${name}Bg | {"backgroundColor": ${color}}
+theme.${name}Ba | {"borderColor": ${color}}
+theme.${name}Bt | {"borderTopColor": ${color}}
+theme.${name}Br | { borderRightColor: ${color} }
+theme.${name}Bb | {"borderBottomColor": ${color}}
+theme.${name}Bl | {"borderLeftColor": ${color}}
+theme.${name}Tint | {"tintColor": ${color}}
+theme.${name}Overlay | {"overlayColor": ${color}}
 
 ### Sample Styles (Primary)
 
 STYLE NAME | STYLES
 |-------|---------------------------------
-primary | {"color": ${color}}
-primaryTextShadow | {"textShadowColor": ${color}}
-primaryTextDecoration | {"textDecorationColor": ${color}}
-primaryBg | {"backgroundColor": ${color}}
-primaryBa | {"borderColor": ${color}}
-primaryBt | {"borderTopColor": ${color}}
-primaryBr | { borderRightColor: ${color} }
-primaryBb | {"borderBottomColor": ${color}}
-primaryBl | {"borderLeftColor": ${color}}
-primaryTint | {"tintColor": ${color}}
-primaryOverlay | {"overlayColor": ${color}}
+theme.primary | {"color": ${color}}
+theme.primaryTextShadow | {"textShadowColor": ${color}}
+theme.primaryTextDecoration | {"textDecorationColor": ${color}}
+theme.primaryBg | {"backgroundColor": ${color}}
+theme.primaryBa | {"borderColor": ${color}}
+theme.primaryBt | {"borderTopColor": ${color}}
+theme.primaryBr | { borderRightColor: ${color} }
+theme.primaryBb | {"borderBottomColor": ${color}}
+theme.primaryBl | {"borderLeftColor": ${color}}
+theme.primaryTint | {"tintColor": ${color}}
+theme.primaryOverlay | {"overlayColor": ${color}}
 
 # Style Guide
 

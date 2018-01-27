@@ -1518,10 +1518,11 @@ export declare const styles: {
     zMax: number & {
         __registeredStyleBrand: TextStyle | ViewStyle | ImageStyle;
     };
+    theme: any;
 };
 export declare function addTheme(themeName: string, colors: {
     [id: string]: string;
 }): void;
 export declare function currentTheme(): string;
-export declare function setTheme(theme: string): void;
+export declare function setTheme(themeName: string): void;
 export declare function withTheme(TargetComponent: React.ComponentClass<any>): React.ComponentClass<any>;
