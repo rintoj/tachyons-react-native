@@ -3,10 +3,8 @@ import { StyleSheet, TextStyle, ViewStyle, ImageStyle } from 'react-native'
 
 export type Style = TextStyle | ViewStyle | ImageStyle
 
-const theme: any = {}
-
 export const styles = {
-  theme, ...StyleSheet.create({
+  ...StyleSheet.create({
     flex: { flex: 1 },
     flex0: { flex: 0 },
     flex1: { flex: 0.1 },
@@ -513,6 +511,7 @@ export const styles = {
     z9999: { zIndex: 9999 },
     zMax: { zIndex: 2147483647 },
   }),
+  theme: {} as { [id: string]: any }
 }
 
 let selectedTheme: string
@@ -532,52 +531,61 @@ function addColor(name: string, color: string) {
   style[`${name}Tint`] = { tintColor: color }
   style[`${name}Overlay`] = { overlayColor: color }
   return style
-
 }
 
 export function addTheme(themeName: string, colors: { [id: string]: string }) {
-  if (selectedTheme == undefined) { selectedTheme = themeName }
+  if (selectedTheme == undefined) {
+    selectedTheme = themeName
+  }
 
   themes[themeName] = Object.keys(colors).reduce((a, colorName) => {
     return { ...a, ...addColor(colorName, colors[colorName]) }
   }, {})
 
   Object.keys(themes[themeName]).forEach((styleName: string) => {
-    styles.theme[styleName] = undefined
-    Object.defineProperty(styles.theme, styleName, {
-      get() { return themes[selectedTheme] && themes[selectedTheme][styleName] }, set() { },
+    ;(styles as any)[styleName] = undefined
+    Object.defineProperty(styles, styleName, {
+      get() {
+        return themes[selectedTheme] && themes[selectedTheme][styleName]
+      },
+      set() {},
     })
   })
-
 }
 
 export function currentTheme() {
   return selectedTheme
 }
 
-export function setTheme(themeName: string) {
-  if (Object.keys(themes).indexOf(themeName) < 0) { throw new Error('Invalid theme name') }
-  selectedTheme = themeName
+export function setTheme(theme: string) {
+  if (Object.keys(themes).indexOf(theme) < 0) {
+    throw new Error('Invalid theme name')
+  }
+  selectedTheme = theme
 }
 
 export function withTheme(TargetComponent: React.ComponentClass<any>): React.ComponentClass<any> {
-
   return class ThemeableComponent extends React.Component<any, { theme?: string }> {
     constructor(props: any) {
       super(props)
       this.state = { theme: selectedTheme }
     }
 
-    setTheme(themeName: string) {
-      this.setState(state => {
-        setTheme(themeName)
-        return { theme: themeName }
+    setTheme(theme: string) {
+      this.setState((state) => {
+        setTheme(theme)
+        return { theme }
       })
     }
 
     render() {
-      return <TargetComponent {...this.props} theme={this.state.theme} setTheme={(themeName: string) => this.setTheme(themeName)} />
+      return (
+        <TargetComponent
+          {...this.props}
+          theme={this.state.theme}
+          setTheme={(theme: string) => this.setTheme(theme)}
+        />
+      )
     }
   }
-
 }

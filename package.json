@@ -1,6 +1,6 @@
 {
   "name": "tachyons-react-native",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "Functional styles for react native based on Tachons library",
   "main": "index.js",
   "scripts": {
@@ -31,15 +31,19 @@
   },
   "homepage": "https://github.com/rintoj/tachyons-react-native#readme",
   "devDependencies": {
+    "@types/react": "^16.9.49",
+    "@types/react-native": "^0.52.5",
+    "fs-extra": "^9.0.1",
+    "name-util": "^1.1.0",
     "react": "^16.2.0",
     "react-native": "^0.52.1",
-    "@types/react": "^16.0.35",
-    "@types/react-native": "^0.52.5",
     "rimraf": "^2.6.2",
     "tslint": "^5.9.1",
     "tslint-eslint-rules": "^4.1.1",
     "tslint-react": "^3.4.0",
-    "tslint-react-recommended": "^1.0.15",
-    "typescript": "^2.6.2"
+    "tslint-react-recommended": "^1.0.15"
+  },
+  "dependencies": {
+    "typescript": "^4.0.2"
   }
 }

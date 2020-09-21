@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.withTheme = exports.setTheme = exports.currentTheme = exports.addTheme = exports.styles = void 0;
 const React = require("react");
 const react_native_1 = require("react-native");
-const theme = {};
-exports.styles = Object.assign({ theme }, react_native_1.StyleSheet.create({
+exports.styles = Object.assign(Object.assign({}, react_native_1.StyleSheet.create({
     flex: { flex: 1 },
     flex0: { flex: 0 },
     flex1: { flex: 0.1 },
@@ -509,7 +509,7 @@ exports.styles = Object.assign({ theme }, react_native_1.StyleSheet.create({
     z999: { zIndex: 999 },
     z9999: { zIndex: 9999 },
     zMax: { zIndex: 2147483647 },
-}));
+})), { theme: {} });
 let selectedTheme;
 const themes = {};
 function addColor(name, color) {
@@ -532,12 +532,16 @@ function addTheme(themeName, colors) {
         selectedTheme = themeName;
     }
     themes[themeName] = Object.keys(colors).reduce((a, colorName) => {
-        return Object.assign({}, a, addColor(colorName, colors[colorName]));
+        return Object.assign(Object.assign({}, a), addColor(colorName, colors[colorName]));
     }, {});
     Object.keys(themes[themeName]).forEach((styleName) => {
-        exports.styles.theme[styleName] = undefined;
-        Object.defineProperty(exports.styles.theme, styleName, {
-            get() { return themes[selectedTheme] && themes[selectedTheme][styleName]; }, set() { },
+        ;
+        exports.styles[styleName] = undefined;
+        Object.defineProperty(exports.styles, styleName, {
+            get() {
+                return themes[selectedTheme] && themes[selectedTheme][styleName];
+            },
+            set() { },
         });
     });
 }
@@ -546,11 +550,11 @@ function currentTheme() {
     return selectedTheme;
 }
 exports.currentTheme = currentTheme;
-function setTheme(themeName) {
-    if (Object.keys(themes).indexOf(themeName) < 0) {
+function setTheme(theme) {
+    if (Object.keys(themes).indexOf(theme) < 0) {
         throw new Error('Invalid theme name');
     }
-    selectedTheme = themeName;
+    selectedTheme = theme;
 }
 exports.setTheme = setTheme;
 function withTheme(TargetComponent) {
@@ -559,14 +563,14 @@ function withTheme(TargetComponent) {
             super(props);
             this.state = { theme: selectedTheme };
         }
-        setTheme(themeName) {
-            this.setState(state => {
-                setTheme(themeName);
-                return { theme: themeName };
+        setTheme(theme) {
+            this.setState((state) => {
+                setTheme(theme);
+                return { theme };
             });
         }
         render() {
-            return React.createElement(TargetComponent, Object.assign({}, this.props, { theme: this.state.theme, setTheme: (themeName) => this.setTheme(themeName) }));
+            return (React.createElement(TargetComponent, Object.assign({}, this.props, { theme: this.state.theme, setTheme: (theme) => this.setTheme(theme) })));
         }
     };
 }
